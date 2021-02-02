@@ -110,22 +110,25 @@ Where school information is missing, such as fax numbers, it's been left blank a
 All data is aggregated at the school level, none were omitted.   
 
 ### Unwanted Data
-Since my research questions/interests largely focus on investigating the relationship of parent education levels and household income on student achievement in standardized examinations in Toronto's secondary school students, while factoring in gifted/special student population, and municipality, the following was done to reduce the dataset:
+Since my research questions/interests largely focus on investigating the relationship of parent education levels and household income on student achievement in standardized examinations in Ontario's secondary school students, while factoring in gifted/special student population, and municipality, the following was done to reduce the dataset:
  
 I removed rows:
 
  * containing elementary schools,
  * containing schools where the language is French, as they have different tests which are covered in a separate dataset,
- * containing a city other than Toronto,
  * having codes NA, NR, or ND in columns to do with Grade 9 EQAO and/or the Grade 10 literacy test (OSSLT),
  * containing code SP in columns to do with household income and/or percentage of students whose parents have some university education.
  
 I also removed the following columns from the dataset:
 
- * location information: board number, board name, board type, school number, building suite, P.O. Box, Street, postal code, province, latitude, longitude,
- * school info: school type, school special condition code (e.g., Alternative, Adult, NA), grade range, enrolment
+ * location information: board number, board name, board type, school number, building suite, P.O. Box, Street, postal code, municipality, province, latitude, longitude,
+ * school info: school type, school level, grade_range, enrolment, school special condition code (e.g., Alternative, Adult, NA), grade range, enrolment
  * contact information: phone number, fax number, school website, board website
  * testing information: grade 3 and 6 results (EQAO, achievement of provincial standard (percentage of student and change over 3 years))
+ * immigrant/first language: percentage of students new to Canada from non English or non French speaking countries, percentage of students whose first language is not English or not French
+ * extract date
+ 
+ In the end, 13 columns remain of the original 51, and the data is reduced from 4887 records to 631 records, due to the removed rows mentioned above.
 
 # Expected Outcomes (400 words)
 
