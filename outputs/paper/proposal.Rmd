@@ -1,0 +1,154 @@
+---
+title: "Project Name"
+subtitle: "Project Tagline"
+author: "Najma Osman"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output: 
+  bookdown::pdf_document2:
+toc: FALSE
+urlcolour: blue
+linkurl: red
+bibliography: references.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(gt)
+```
+
+# Project Overview (600 words)
+
+## Early Exploration Results
+
+### What did you find?
+
+```{r echo = FALSE, fig.cap = "Figure 1"}
+
+```
+
+```{r echo = FALSE, fig.cap = "Figure 2"}
+
+```
+
+```{r echo = FALSE, fig.cap = "Figure 3"}
+
+```
+
+### Next Steps
+
+## Key Data Elements/Fields
+
+## Key Questions
+
+### Q1
+### Q2
+### Q3
+### Q4
+### Q5
+
+
+# Data
+
+## Source + Type
+
+I've chosen a [public dataset](https://data.ontario.ca/dataset/school-information-and-student-demographics) from Ontario's Data Catalogue. This dataset is on school information and student demographics in the province of Ontario, not including private schools, Education and Community Partnership Programs, or summer and night schools. It includes data on the following:
+
+* board information
+* school information
+* grade 3 and 6 EQAO achievements for reading, writing and mathematics
+* grade 9 EQAO academic and applied student achievements
+* grade 10 OSSLT student achievement
+* student demographic percentages on student parents, special education, first language spoken, and new students to Canada
+
+The data is reported by:
+
+* Board School Identification Database (BSID) and Ontario School Information System (OnSIS),
+* OnSIS Preliminary 2018-2019 (Student Population)
+* the Education Quality and Accountability Office (EQAO), specifically the 2018-2019 data, 
+* and the 2016 census.
+
+## Cleaning Requirements (500 words)
+
+This dataset does not need a significant amount of cleaning. I've only used the package janitor by @citeJanitor to modify the column names into snake case (variable_name) format, to access column names more easily. All other changes focused on data reduction to remove any unwanted fields, which I'll go into detail on in section 2.2.6. [Click here](https://github.com/najmamosman/2400-Proposal/tree/main/outputs/data) to see a copy of the cleaned data.
+
+### Data Quality
+
+The dataset is current (last updated December 2020, and generally updated on a monthly basis), has consistent units, is complete for all schools in the province of Ontario, and correct.
+
+### Anonymization
+This dataset pulls from OnSIS and Statistics Canada, which both suppress results for variables based on school population size to protect student privacy. The following methods were used to ensure anonymity:
+
+* randomly rounding percentages up or down depending on school enrolment,
+    * 0 - NA
+    * 1-49 - SP
+    * 50-99 - round up or down to a multiple of 10
+    * 100-499 - round up or down to a multiple of 5
+    * 500-4,999 - round up or down to the ones digit
+    * 5,000 + - round up or down to one decimal place
+
+* not publicly reporting data where enrolment is less than 10.
+
+### Inconsistencies
+
+* There are no name variations, or name changes (as of December 2020),
+* no user-provided input, typos/spaces, and dates are consistent ,
+* and all columns utilising measurement (e.g., percentages) follow the same unit of measurement, and hold a single value,
+
+### Missing Data
+There 4 instances of missing data in this set, which is already handled by the cataloguer:
+
+* where student population information isn't available due to the school board not providing the data to the ministry (denoted by NA),
+* where schools the school does not have EQAO results (denoted by ND),
+* where the number of students participating is fewer than 10 and anonymity isn't ensured (denoted by NR),
+* and where the results are repressed due to school enrolment of fewer than 50 students (denoted by SP).
+
+Where school information is missing, such as fax numbers, it's been left blank and I've made no changes.
+
+### Outliers
+
+All data is aggregated at the school level, none were omitted.   
+
+### Unwanted Data
+Since my research questions/interests largely focus on investigating the relationship of parent education levels and household income on student achievement in standardized examinations in Toronto's secondary school students, while factoring in gifted/special student population, and municipality, the following was done to reduce the dataset:
+ 
+I removed rows:
+
+ * containing elementary schools,
+ * containing schools where the language is French, as they have different tests which are covered in a separate dataset,
+ * containing a city other than Toronto,
+ * having codes NA, NR, or ND in columns to do with Grade 9 EQAO and/or the Grade 10 literacy test (OSSLT),
+ * containing code SP in columns to do with household income and/or percentage of students whose parents have some university education.
+ 
+I also removed the following columns from the dataset:
+
+ * location information: board number, board name, board type, school number, building suite, P.O. Box, Street, postal code, province, latitude, longitude,
+ * school info: school type, school special condition code (e.g., Alternative, Adult, NA), grade range, enrolment
+ * contact information: phone number, fax number, school website, board website
+ * testing information: grade 3 and 6 results (EQAO, achievement of provincial standard (percentage of student and change over 3 years))
+
+# Expected Outcomes (400 words)
+
+What do you expect to learn? We are not asking to predict the results but asking what you will be able to tell a story on? Housing prices? Pandemic control? Marketing results?
+
+# Expected Challenges (400 words)
+
+Getting access to the latest data
+Finding an expert on the topic
+Finding detailed data
+Data consistency
+...
+
+# Next Steps (300 words)
+
+Your skills and ideal team member skills
+
+External resources & support: What other resources and support can you use to shape your story and provide context
+
+\newpage
+
+# Supporting Documents
+
+\newpage
+
+# References
