@@ -1,0 +1,84 @@
+---
+title: "Project Name"
+subtitle: "Project Tagline"
+author: "Najma Osman"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output: 
+  bookdown::pdf_document2:
+toc: FALSE
+urlcolour: blue
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(gt)
+```
+
+# Project Overview (600 words)
+
+## Early Exploration Results
+
+### What did you find?
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+### Next Steps
+
+## Key Data Elements/Fields
+
+## Key Questions
+
+### Q1
+### Q2
+### Q3
+### Q4
+### Q5
+
+
+# Data
+
+## Source + Type
+
+I've chosen a [public dataset](https://data.ontario.ca/dataset/school-information-and-student-demographics) from Ontario's Data Catalogue. This dataset is on school information and student demographics in the province of Ontario, and includes the following:
+
+* board information
+* school information
+* grade 3 and 6 EQAO achievements for reading, writing and mathematics
+* grade 9 EQAO academic and applied student achievements
+* grade 10 OSSLT student achievement
+* student demographic percentages on student parents, special education, first language spoken, and new students to Canada
+
+The data is reported by:
+* Board School Identification Database (BSID) and Ontario School Information System (OnSIS),
+* OnSIS Preliminary 2018-2019 (Student Population)
+* the Education Quality and Accountability Office (EQAO), specifically the 2018-2019 data, 
+* and the 2016 census.
+
+It discludes private schools, Education and Community Partnership Programs, as well as summer and night schools.
+
+## Cleaning Requirements (500 words)
+
+Does the data set need cleaning? If so, where, how, and why? Have you done any of the cleanings? Please share a link to the cleaned data as well
+
+# Expected Outcomes (400 words)
+
+What do you expect to learn? We are not asking to predict the results but asking what you will be able to tell a story on? Housing prices? Pandemic control? Marketing results?
+
+# Expected Challenges (400 words)
+
+Getting access to the latest data
+Finding an expert on the topic
+Finding detailed data
+Data consistency
+...
