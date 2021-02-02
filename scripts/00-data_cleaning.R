@@ -60,6 +60,16 @@ filter_data <-
       # * contact information: phone number, fax number, school website, board website
       # * testing information: grade 3 and 6 results (EQAO, achievement of provincial standard (percentage of student and change over 3 years))
 
-=
+select_data <-
+  filter_data %>%
+  select(-c(board_number, board_name, board_type, school_number, building_suite, p_o_box, street, postal_code, municipality, province, latitude, longitude,
+            school_type, school_special_condition_code, school_language, school_level, grade_range, enrolment,
+            phone_number, fax_number, school_website, board_website)) %>%
+  select(-c(percentage_of_students_whose_first_language_is_not_english, percentage_of_students_whose_first_language_is_not_french, percentage_of_students_who_are_new_to_canada_from_a_non_english_speaking_country, percentage_of_students_who_are_new_to_canada_from_a_non_french_speaking_country)) %>%
+  select(-c(change_in_grade_3_reading_achievement_over_three_years, change_in_grade_3_writing_achievement_over_three_years, change_in_grade_3_mathematics_achievement_over_three_years, 
+            percentage_of_grade_3_students_achieving_the_provincial_standard_in_mathematics, percentage_of_grade_3_students_achieving_the_provincial_standard_in_reading, percentage_of_grade_3_students_achieving_the_provincial_standard_in_writing,
+            change_in_grade_6_mathematics_achievement_over_three_years, change_in_grade_6_reading_achievement_over_three_years, change_in_grade_6_mathematics_achievement_over_three_years,
+            percentage_of_grade_6_students_achieving_the_provincial_standard_in_mathematics, percentage_of_grade_6_students_achieving_the_provincial_standard_in_writing, percentage_of_grade_6_students_achieving_the_provincial_standard_in_reading)) %>%
+  select(-c(extract_date))
 
 #### save cleaned/reduced data set ####
