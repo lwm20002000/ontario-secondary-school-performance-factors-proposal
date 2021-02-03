@@ -128,7 +128,7 @@ I also removed the following columns from the dataset:
  * immigrant/first language: percentage of students new to Canada from non English or non French speaking countries, percentage of students whose first language is not English or not French
  * extract date
  
- In the end, 13 columns remain of the original 51, and the data is reduced from 4887 records to 631 records, due to the removed rows mentioned above.
+ In the end, 12 columns remain of the original 51, and the data is reduced from 4887 records to 631 records, due to the removed rows mentioned above.
 
 # Expected Outcomes (400 words)
 
