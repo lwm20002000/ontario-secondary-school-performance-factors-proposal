@@ -13,6 +13,7 @@ library(here)
 library(janitor)
 library(tidyverse)
 library(readxl)
+library(writexl)
 library(curl)
 
 #### get and read in raw data #### 
@@ -31,7 +32,7 @@ raw_data <-
 
 # clean row names #
 
-cleaned_data <- 
+clean_names <- 
   janitor::clean_names(raw_data)
 
 # reduced data; #
@@ -73,3 +74,6 @@ select_data <-
   select(-c(extract_date))
 
 #### save cleaned/reduced data set ####
+
+writexl::write_xlsx(select_data, here("outputs/data/cleaned_data.xlsx"), col_names = TRUE)
+
