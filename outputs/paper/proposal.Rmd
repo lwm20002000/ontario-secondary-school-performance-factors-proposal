@@ -1,6 +1,6 @@
 ---
-title: "Project Name"
-subtitle: "Project Tagline"
+title: "Project Student Success"
+subtitle: "How household income and parent education levels effect student achievement in provincial standards and examinations."
 author: "Najma Osman"
 date: "`r format(Sys.time(), '%d %B %Y')`"
 output: 
@@ -15,6 +15,8 @@ bibliography: references.bib
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(gt)
+library(here)
+source(here("scripts/00-data_cleaning.R"), local = knitr::knit_global())
 ```
 
 # Project Overview (600 words)
@@ -23,30 +25,105 @@ library(gt)
 
 ### What did you find?
 
-```{r echo = FALSE, fig.cap = "Figure 1"}
+```{r fig1, echo = FALSE, message = FALSE, fig.cap = "Figure 1"}
+select_data$parent_edu <- 
+  as.numeric(as.factor(select_data$percentage_of_students_whose_parents_have_some_university_education))
 
+select_data$low_income <- 
+  as.numeric(select_data$percentage_of_school_aged_children_who_live_in_low_income_households)
+
+ggplot(data = select_data, mapping = aes(x = parent_edu, y = low_income)) +
+  geom_point() +
+  geom_smooth(method = lm, color = "black") +
+  theme_minimal() +
+  labs(y = "% of Students in Low Income Households",
+       x = "% of Students Whose Parents Have Some University Education",
+       title = "Title")
 ```
 
-```{r echo = FALSE, fig.cap = "Figure 2"}
+```{r fig2, echo = FALSE, messages = FALSE, fig.cap = "Figure 2"}
+select_data$enrol <- 
+  as.numeric(as.factor(select_data$enrolment))
 
+select_data$osslt_pass_rate <- 
+  as.numeric(as.factor(select_data$percentage_of_students_that_passed_the_grade_10_osslt_on_their_first_attempt))
+
+ggplot(data = select_data, mapping = aes(x = enrol, y = osslt_pass_rate)) +
+  geom_point() +
+  geom_smooth(method = lm, color = "black") +
+  theme_minimal() +
+  labs(x = "School Enrolment",
+       y = "% of Students Who Passed the OSSLT on their First Attempt",
+       title = "Title")
 ```
 
-```{r echo = FALSE, fig.cap = "Figure 3"}
-
+```{r fig3, echo = FALSE}
+t1 <-
+  select_data %>%
+    group_by(board_name, school_name) %>%
+    summarise(osslt = percentage_of_students_that_passed_the_grade_10_osslt_on_their_first_attempt, academic = percentage_of_grade_9_students_achieving_the_provincial_standard_in_academic_mathematics, applied = percentage_of_grade_9_students_achieving_the_provincial_standard_in_applied_mathematics, .groups = 'drop') %>%
+    arrange(desc(osslt)) %>%
+    slice(1:15)
+gt(data = t1) %>%
+  tab_header(
+    title = "Schools with Lowest OSSLT Pass Rate on First Try",
+    subtitle = "subtitle"
+    ) %>%
+  cols_label(
+    board_name = html("Board Name"),
+    school_name = html("School Name")
+   # osslt = html("OSSLT First Time Pass Rate (%)"),
+    #academic = html("% of Students Achieving Provincial Standard in Academic Mathematics"),
+    #applied = html("% of Students Achieving Provincial Standard in Applied Mathematics")
+  )
 ```
+
+```{r fig4, echo = FALSE}
+t2 <-
+  select_data %>%
+    group_by(board_name, school_name) %>%
+    summarise(osslt = percentage_of_students_that_passed_the_grade_10_osslt_on_their_first_attempt, academic = percentage_of_grade_9_students_achieving_the_provincial_standard_in_academic_mathematics, applied = percentage_of_grade_9_students_achieving_the_provincial_standard_in_applied_mathematics, .groups = 'drop') %>%
+    arrange(osslt) %>%
+    slice(1:15)
+gt(data = t2) %>%
+  tab_header(
+    title = "Schools with Lowest OSSLT Pass Rate on First Try",
+    subtitle = "subtitle"
+    ) %>%
+  cols_label(
+    board_name = html("Board Name"),
+    school_name = html("School Name")
+#    osslt = html("OSSLT First Time Pass Rate (%)"),
+ #   academic = html("% of Students Achieving Provincial Standard in Academic Mathematics"),
+  #  applied = html("% of Students Achieving Provincial Standard in Applied Mathematics")
+  )
+```
+
+\newpage
 
 ### Next Steps
 
 ## Key Data Elements/Fields
 
+* % of students whose parents have some university education
+* % of school aged children who live in low income households
+* % of students that passed the grade 10 OSSLT on their first attempt
+* Change in grade 10 OSSLT literacy achievement over three years?
+* % of grade 9 students achieving the provincial standard in academic mathematics
+* Change in grade 9 academic mathematics achievement over three years?
+* % of grade 9 students achieving the provincial standard in applied mathematics
+* Change in grade 9 applied mathematics achievement over three years
+
 ## Key Questions
 
-### Q1
-### Q2
-### Q3
-### Q4
-### Q5
-
+1. Does the percentage of students who live in low income households affect student achievement in academic and applied mathematics for the worst? What about the inverse?
+    a. What about percentage of students passing the OSSLT on the first try?
+2. What schools have the most students reaching the provincial standard in mathematics?
+    a. Do those schools also have the highest percentages of students passing the OSSLT? Or is there an inverse relationship between mathematics and literacy achievement? (e.g., increased mathematics achievement over 3 years but decreased instance of OSSLT being passed on first attempt)
+3. What cities/school boards have the highest average of students passing the OSSLT on the first attempt?
+4. Do schools with higher percentages of parents with some post secondary achievement have a higher instance of student giftedness, and a lower instance of students receiving special education services?
+5. Does school enrolment size affect achievement in mathematics? Likelihood of passing the OSSLT on the first try? 
+6. Do schools with more low income students also have less parents who have had some post-secondary education?
 
 # Data
 
@@ -70,7 +147,7 @@ The data is reported by:
 
 ## Cleaning Requirements (500 words)
 
-This dataset does not need a significant amount of cleaning. I've only used the package janitor by @citeJanitor to modify the column names into snake case (variable_name) format, to access column names more easily. All other changes focused on data reduction to remove any unwanted fields, which I'll go into detail on in section 2.2.6. [Click here](https://github.com/najmamosman/2400-Proposal/tree/main/outputs/data) to see a copy of the cleaned data.
+Insofar, I've used the package janitor by @citeJanitor to modify the column names into snake case (variable_name) format, to access column names more easily, and reduced data using the tidyverse package by @citeTidyverse, which I'll go into detail about in section 2.2.6. Additional cleaning required is converting columns into proper numeric values, rather than factors and/or characters as is the case for some. [Click here](https://github.com/najmamosman/2400-Proposal/tree/main/outputs/data) to see a copy of the cleaned data. 
 
 ### Data Quality
 
@@ -92,7 +169,7 @@ This dataset pulls from OnSIS and Statistics Canada, which both suppress results
 ### Inconsistencies
 
 * There are no name variations, or name changes (as of December 2020),
-* no user-provided input, typos/spaces, and dates are consistent ,
+* no user-provided input, typos/spaces, and dates are consistent,
 * and all columns utilising measurement (e.g., percentages) follow the same unit of measurement, and hold a single value,
 
 ### Missing Data
@@ -110,25 +187,25 @@ Where school information is missing, such as fax numbers, it's been left blank a
 All data is aggregated at the school level, none were omitted.   
 
 ### Unwanted Data
-Since my research questions/interests largely focus on investigating the relationship of parent education levels and household income on student achievement in standardized examinations in Ontario's secondary school students, while factoring in gifted/special student population, and municipality, the following was done to reduce the dataset:
+Since my research questions/interests largely focus on investigating the relationship of parent education levels and household income on student achievement in standardized examinations/provincial standards in Ontario's secondary school students, while factoring in gifted/special student population, and municipality, the following was done to reduce the dataset:
  
 I removed rows:
 
  * containing elementary schools,
  * containing schools where the language is French, as they have different tests which are covered in a separate dataset,
- * having codes NA, NR, or ND in columns to do with Grade 9 EQAO and/or the Grade 10 literacy test (OSSLT),
+ * having codes NA, NR, or ND in columns to do with Grade 9 mathematics achievement of provincial standards and/or the Grade 10 literacy test (OSSLT),
  * containing code SP in columns to do with household income and/or percentage of students whose parents have some university education.
  
 I also removed the following columns from the dataset:
 
- * location information: board number, board name, board type, school number, building suite, P.O. Box, Street, postal code, municipality, province, latitude, longitude,
- * school info: school type, school level, grade_range, enrolment, school special condition code (e.g., Alternative, Adult, NA), grade range, enrolment
+ * location information: board number, board type, school number, building suite, P.O. Box, Street, postal code, municipality, province, latitude, longitude,
+ * school info: school type, school level, grade_range, enrolment, school special condition code (e.g., Alternative, Adult, NA), grade range,
  * contact information: phone number, fax number, school website, board website
  * testing information: grade 3 and 6 results (EQAO, achievement of provincial standard (percentage of student and change over 3 years))
  * immigrant/first language: percentage of students new to Canada from non English or non French speaking countries, percentage of students whose first language is not English or not French
  * extract date
  
- In the end, 12 columns remain of the original 51, and the data is reduced from 4887 records to 631 records, due to the removed rows mentioned above.
+ In the end, 14 columns remain of the original 51, and the data is reduced from 4887 records to 604 records, due to the removed rows mentioned above.
 
 # Expected Outcomes (400 words)
 
@@ -140,17 +217,14 @@ Getting access to the latest data
 Finding an expert on the topic
 Finding detailed data
 Data consistency
-...
+etc
 
 # Next Steps (300 words)
 
-Your skills and ideal team member skills
+My skills are largely technical since I have some working background in programming. I'm comfortable working either in R or Python to both clean and analyze datasets, and even come to conclusions or observations based on that analysis. However, while I can make the graphs and tables to be able to do that, I've never had a phenomenal eye when it comes to actually visualizing the data. Ideally, my team members will be better equipped at:
 
-External resources & support: What other resources and support can you use to shape your story and provide context
-
-\newpage
-
-# Supporting Documents
+* telling a story with the results of the analysis, and
+* crafting a more aesthetic representation of the data plots (or guiding me in doing so).
 
 \newpage
 
