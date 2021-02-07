@@ -12,36 +12,42 @@ bibliography: references.bib
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+library(knitr)
 library(tidyverse)
 library(gt)
 library(here)
 source(here("scripts/00-data_cleaning.R"), local = knitr::knit_global())
+knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# Project Overview (600 words)
+# Project Overview
 
 ## Early Exploration Results
 
+To start, I plotted two scatter plots and two tables, moving toward answering Section questions 3, 5 and 6 from Section 1.3 (Key Questions).
+
 ### What did you find?
 
-```{r fig1, echo = FALSE, message = FALSE, fig.cap = "Figure 1"}
+```{r fig1, echo = FALSE, message = FALSE}
 select_data$parent_edu <- 
   as.numeric(as.factor(select_data$percentage_of_students_whose_parents_have_some_university_education))
 
 select_data$low_income <- 
   as.numeric(select_data$percentage_of_school_aged_children_who_live_in_low_income_households)
 
-ggplot(data = select_data, mapping = aes(x = parent_edu, y = low_income)) +
+ggplot(data = select_data, mapping = aes(y = parent_edu, x = low_income)) +
   geom_point() +
   geom_smooth(method = lm, color = "black") +
   theme_minimal() +
-  labs(y = "% of Students in Low Income Households",
-       x = "% of Students Whose Parents Have Some University Education",
-       title = "Title")
+  labs(x = "% of Students in Low Income Households",
+       y = "% of Students Whose Parents Have Some University Education",
+       caption = "Figure 1",
+       title = "Students in Low Income Household Likelihood of Parents Having Some University Education")
 ```
 
-```{r fig2, echo = FALSE, messages = FALSE, fig.cap = "Figure 2"}
+Figure 1 explored the relationship between the percentage of students in low income households and the percentage of students whose parents have some university education. By the best fit line, it seems incredibly small, but there is a slight downward trend in percentage of low income students when the percentage of students with parents who have some university education increases. However, the spread is far from uniform.
+
+```{r fig2, echo = FALSE, message = FALSE}
 select_data$enrol <- 
   as.numeric(as.factor(select_data$enrolment))
 
@@ -54,54 +60,64 @@ ggplot(data = select_data, mapping = aes(x = enrol, y = osslt_pass_rate)) +
   theme_minimal() +
   labs(x = "School Enrolment",
        y = "% of Students Who Passed the OSSLT on their First Attempt",
-       title = "Title")
+       title = "School Enrolment Sizes Effect on OSSLT First Attempt Pass Rate",
+       caption = "Figure 2")
 ```
 
-```{r fig3, echo = FALSE}
+In comparison, Figure 2 appears to have a more noticeable trend, where we see higher student enrolment decreasing the percentage of students who passed the OSSLT on their first attempt. Again, the spread is large, and there's a significant amount of outliers, so maybe averaging schools out to the district school board level will present a more consistent picture.
+
+```{r tab1, echo = FALSE}
 t1 <-
   select_data %>%
     group_by(board_name, school_name) %>%
-    summarise(osslt = percentage_of_students_that_passed_the_grade_10_osslt_on_their_first_attempt, academic = percentage_of_grade_9_students_achieving_the_provincial_standard_in_academic_mathematics, applied = percentage_of_grade_9_students_achieving_the_provincial_standard_in_applied_mathematics, .groups = 'drop') %>%
+    summarise(osslt = percentage_of_students_that_passed_the_grade_10_osslt_on_their_first_attempt, academic_math = percentage_of_grade_9_students_achieving_the_provincial_standard_in_academic_mathematics, applied_math = percentage_of_grade_9_students_achieving_the_provincial_standard_in_applied_mathematics, .groups = 'drop') %>%
     arrange(desc(osslt)) %>%
-    slice(1:15)
+    slice(1:10)
 gt(data = t1) %>%
   tab_header(
-    title = "Schools with Lowest OSSLT Pass Rate on First Try",
-    subtitle = "subtitle"
+    title = "Schools with Highest OSSLT Pass Rate on First Try",
+    subtitle = "and their corresponding achievement of provincial math standards."
     ) %>%
   cols_label(
     board_name = html("Board Name"),
     school_name = html("School Name")
-   # osslt = html("OSSLT First Time Pass Rate (%)"),
-    #academic = html("% of Students Achieving Provincial Standard in Academic Mathematics"),
-    #applied = html("% of Students Achieving Provincial Standard in Applied Mathematics")
   )
 ```
 
-```{r fig4, echo = FALSE}
+Interestingly, the table (Table 1) that looks to the top 10 schools for the Grade 10 Literacy Test (OSSLT) pass rates shows us a few things:
+
+1. 8 out of 10 of the schools are located in the Greater Toronto Area (York CDSB, York Region DSB, and Toronto DSB),
+2. These schools also have an exceptional amount of their students who are at or above the provincial standard for academic mathematics,
+3. But they do not perform as well with applied mathematics.
+
+```{r tab2, echo = FALSE}
 t2 <-
   select_data %>%
     group_by(board_name, school_name) %>%
-    summarise(osslt = percentage_of_students_that_passed_the_grade_10_osslt_on_their_first_attempt, academic = percentage_of_grade_9_students_achieving_the_provincial_standard_in_academic_mathematics, applied = percentage_of_grade_9_students_achieving_the_provincial_standard_in_applied_mathematics, .groups = 'drop') %>%
+    summarise(osslt = percentage_of_students_that_passed_the_grade_10_osslt_on_their_first_attempt, academic_math = percentage_of_grade_9_students_achieving_the_provincial_standard_in_academic_mathematics, applied_math = percentage_of_grade_9_students_achieving_the_provincial_standard_in_applied_mathematics, .groups = 'drop') %>%
     arrange(osslt) %>%
-    slice(1:15)
+    slice(1:10)
 gt(data = t2) %>%
   tab_header(
     title = "Schools with Lowest OSSLT Pass Rate on First Try",
-    subtitle = "subtitle"
+    subtitle = "and their corresponding achievement of provincial math standards."
     ) %>%
   cols_label(
     board_name = html("Board Name"),
     school_name = html("School Name")
-#    osslt = html("OSSLT First Time Pass Rate (%)"),
- #   academic = html("% of Students Achieving Provincial Standard in Academic Mathematics"),
-  #  applied = html("% of Students Achieving Provincial Standard in Applied Mathematics")
   )
 ```
+
+As for the bottom 10:
+
+1. 8 out of 10 of the schools perform better in academic math than the OSSLT,
+2. and only 2 out of 10 perform better in applied mathematics than academic mathematics and/or the OSSLT.
 
 \newpage
 
 ### Next Steps
+
+Next steps include aggregating/summarising the data at the city, or even the board level, so we can see a clearer picture of where the province may need to put more resources at a municipal or regional level by adjusting these tables or graphs to that. 
 
 ## Key Data Elements/Fields
 
@@ -145,15 +161,16 @@ The data is reported by:
 * the Education Quality and Accountability Office (EQAO), specifically the 2018-2019 data, 
 * and the 2016 census.
 
-## Cleaning Requirements (500 words)
+## Cleaning Requirements
 
-Insofar, I've used the package janitor by @citeJanitor to modify the column names into snake case (variable_name) format, to access column names more easily, and reduced data using the tidyverse package by @citeTidyverse, which I'll go into detail about in section 2.2.6. Additional cleaning required is converting columns into proper numeric values, rather than factors and/or characters as is the case for some. [Click here](https://github.com/najmamosman/2400-Proposal/tree/main/outputs/data) to see a copy of the cleaned data. 
+Insofar, I've used the package janitor by @citeJanitor to modify the column names into snake case (variable_name) format, to access column names more easily, and reduced data using the tidyverse package by @citeTidyverse, which I'll go into detail about in section 2.2.6. Additional cleaning is required for converting columns into proper numeric values, rather than factors and/or characters as is the case for some. [Click here](https://github.com/najmamosman/2400-Proposal/tree/main/outputs/data) to see a copy of the cleaned data. 
 
 ### Data Quality
 
 The dataset is current (last updated December 2020, and generally updated on a monthly basis), has consistent units, is complete for all schools in the province of Ontario, and correct.
 
 ### Anonymization
+
 This dataset pulls from OnSIS and Statistics Canada, which both suppress results for variables based on school population size to protect student privacy. The following methods were used to ensure anonymity:
 
 * randomly rounding percentages up or down depending on school enrolment,
@@ -173,6 +190,7 @@ This dataset pulls from OnSIS and Statistics Canada, which both suppress results
 * and all columns utilising measurement (e.g., percentages) follow the same unit of measurement, and hold a single value,
 
 ### Missing Data
+
 There 4 instances of missing data in this set, which is already handled by the cataloguer:
 
 * where student population information isn't available due to the school board not providing the data to the ministry (denoted by NA),
@@ -187,6 +205,7 @@ Where school information is missing, such as fax numbers, it's been left blank a
 All data is aggregated at the school level, none were omitted.   
 
 ### Unwanted Data
+
 Since my research questions/interests largely focus on investigating the relationship of parent education levels and household income on student achievement in standardized examinations/provincial standards in Ontario's secondary school students, while factoring in gifted/special student population, and municipality, the following was done to reduce the dataset:
  
 I removed rows:
@@ -202,26 +221,27 @@ I also removed the following columns from the dataset:
  * school info: school type, school level, grade_range, enrolment, school special condition code (e.g., Alternative, Adult, NA), grade range,
  * contact information: phone number, fax number, school website, board website
  * testing information: grade 3 and 6 results (EQAO, achievement of provincial standard (percentage of student and change over 3 years))
- * immigrant/first language: percentage of students new to Canada from non English or non French speaking countries, percentage of students whose first language is not English or not French
+ * student info: percentage of students new to Canada from non English or non French speaking countries, percentage of students whose first language is not English or not French
  * extract date
  
  In the end, 14 columns remain of the original 51, and the data is reduced from 4887 records to 604 records, due to the removed rows mentioned above.
 
-# Expected Outcomes (400 words)
+# Expected Outcomes 
 
-What do you expect to learn? We are not asking to predict the results but asking what you will be able to tell a story on? Housing prices? Pandemic control? Marketing results?
+With this data, and these questions, I expect I'll be able to tell a story on how the percentage of students in low income households, percentage of students whose parents have had some university education, and even school enrolment sizes affect school performance on achievement of provincial standards in Grade 9 mathematics, as well as the literacy test (OSSLT). That is, we can see how or if these dimensions result in higher or lower pass rates, or achievement of provincial standards, and then extrapolate on why this may be the case (via research). For instance, if enrolment size appears to affect the school or board's achievement, we can potentially make a case for an issue of resources, or large class sizes. If the percentage of students in low income households, or the percentage of students whose parents have had some university education is higher for those schools with lower pass rate of the OSSLT, or lower instance of achievement of provincial standards in mathematics, we could potentially point to fewer resources at home. It's also possible to look to data at the board level, and see which boards perform exceptionally well or poorly, allowing us to see if the effects are only at a single school within the district or present throughout the district. 
 
-# Expected Challenges (400 words)
+# Expected Challenges
 
-Getting access to the latest data
-Finding an expert on the topic
-Finding detailed data
-Data consistency
-etc
+A major challenge with this analysis is that two of the primary variables being looked at are estimates: the percentage of students in low income households, and the percentage of students whose parents have some university education.
 
-# Next Steps (300 words)
+Both are calculated using student postal code data which is collected by the school, and then cross-referenced with the 2016 Census data from Statistics Canada. The measures are directly proportionate to the number of children from those different postal codes attending the school. For low income students, it's gathered by determining the percentage of school-aged children in households below the after-tax-low-income measure threshold (LIM-AT). Whereas for the university education metric, it's determined by seeing if one parent in the household (still within the postal code estimations) has a certificate, diploma, or degree from a university.
+ 
+In addition to this, funding may explain some issues at the school and/or board level, but the allocation of funding from the province, to the boards (or from the boards), and then to the school doesn't appear to be transparent. For instance, access to the 2018-2019 budget plan for the Toronto District School Board is hidden behind an employee login page for the TDSB. Funding has to exist as a confounding variable at this point in time, since this dataset doesn't have any funding related columns.
 
-My skills are largely technical since I have some working background in programming. I'm comfortable working either in R or Python to both clean and analyze datasets, and even come to conclusions or observations based on that analysis. However, while I can make the graphs and tables to be able to do that, I've never had a phenomenal eye when it comes to actually visualizing the data. Ideally, my team members will be better equipped at:
+
+# Next Steps
+
+My skills are largely technical since I have some working background in programming. I'm comfortable working either in R or Python to both clean and analyze datasets, and even come to conclusions or observations based on that initial analysis. However, while I can make the graphs and tables to be able to do that, I've never had a phenomenal eye when it comes to actually visualizing the data. Ideally, my team members will be better equipped at:
 
 * telling a story with the results of the analysis, and
 * crafting a more aesthetic representation of the data plots (or guiding me in doing so).
