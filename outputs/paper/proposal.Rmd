@@ -1,6 +1,6 @@
 ---
 title: "Project Student Success"
-subtitle: "How household income and parent education levels effect student achievement in provincial standards and examinations."
+subtitle: "How household income and parent education levels, and school enrolment sizes effect student achievement in provincial standards and examinations."
 author: "Najma Osman"
 date: "`r format(Sys.time(), '%d %B %Y')`"
 output: 
