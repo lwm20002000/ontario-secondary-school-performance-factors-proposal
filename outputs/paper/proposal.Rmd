@@ -29,13 +29,7 @@ To start, I plotted two scatter plots and two tables, moving toward answering Se
 ### What did you find?
 
 ```{r fig1, echo = FALSE, message = FALSE}
-select_data$parent_edu <- 
-  as.numeric(as.factor(select_data$percentage_of_students_whose_parents_have_some_university_education))
-
-select_data$low_income <- 
-  as.numeric(select_data$percentage_of_school_aged_children_who_live_in_low_income_households)
-
-ggplot(data = select_data, mapping = aes(y = parent_edu, x = low_income)) +
+ggplot(data = select_data, mapping = aes(y = percentage_of_students_whose_parents_have_some_university_education, x = percentage_of_school_aged_children_who_live_in_low_income_households)) +
   geom_point() +
   geom_smooth(method = lm, color = "black") +
   theme_minimal() +
@@ -48,13 +42,7 @@ ggplot(data = select_data, mapping = aes(y = parent_edu, x = low_income)) +
 Figure 1 explored the relationship between the percentage of students in low income households and the percentage of students whose parents have some university education. By the best fit line, it seems incredibly small, but there is a slight downward trend in percentage of low income students when the percentage of students with parents who have some university education increases. However, the spread is far from uniform.
 
 ```{r fig2, echo = FALSE, message = FALSE}
-select_data$enrol <- 
-  as.numeric(as.factor(select_data$enrolment))
-
-select_data$osslt_pass_rate <- 
-  as.numeric(as.factor(select_data$percentage_of_students_that_passed_the_grade_10_osslt_on_their_first_attempt))
-
-ggplot(data = select_data, mapping = aes(x = enrol, y = osslt_pass_rate)) +
+ggplot(data = select_data, mapping = aes(x = enrolment, y = percentage_of_students_that_passed_the_grade_10_osslt_on_their_first_attempt)) +
   geom_point() +
   geom_smooth(method = lm, color = "black") +
   theme_minimal() +
