@@ -81,6 +81,25 @@ select_data <-
             percentage_of_grade_6_students_achieving_the_provincial_standard_in_mathematics, percentage_of_grade_6_students_achieving_the_provincial_standard_in_writing, percentage_of_grade_6_students_achieving_the_provincial_standard_in_reading)) %>%
   select(-c(extract_date))
 
+#### convert character columns which contain numbers to numeric ####
+
+# remove % symbols from columns on achieving mathematics standard/OSSLT pass attempts and convert to numeric
+
+select_data$percentage_of_grade_9_students_achieving_the_provincial_standard_in_academic_mathematics <- as.numeric(as.character(gsub("%", "", select_data$percentage_of_grade_9_students_achieving_the_provincial_standard_in_academic_mathematics)))
+select_data$percentage_of_grade_9_students_achieving_the_provincial_standard_in_applied_mathematics <- as.numeric(as.character(gsub("%", "", select_data$percentage_of_grade_9_students_achieving_the_provincial_standard_in_applied_mathematics)))
+select_data$percentage_of_students_that_passed_the_grade_10_osslt_on_their_first_attempt <- as.numeric(as.character(gsub("%", "", select_data$percentage_of_students_that_passed_the_grade_10_osslt_on_their_first_attempt)))
+
+# convert remaining character columns that should be numeric
+
+select_data$enrolment <- as.numeric(as.character(select_data$enrolment))
+select_data$percentage_of_students_receiving_special_education_services <- as.numeric(as.character(select_data$percentage_of_students_receiving_special_education_services))
+select_data$percentage_of_students_identified_as_gifted <- as.numeric(as.character(select_data$percentage_of_students_identified_as_gifted))
+select_data$change_in_grade_9_academic_mathematics_achievement_over_three_years <- as.numeric(as.character(select_data$change_in_grade_9_academic_mathematics_achievement_over_three_years))
+select_data$change_in_grade_9_applied_mathematics_achievement_over_three_years <- as.numeric(as.character(select_data$change_in_grade_9_applied_mathematics_achievement_over_three_years))
+select_data$change_in_grade_10_osslt_literacy_achievement_over_three_years <- as.numeric(as.character(select_data$change_in_grade_10_osslt_literacy_achievement_over_three_years))
+select_data$percentage_of_school_aged_children_who_live_in_low_income_households <- as.numeric(as.character(select_data$percentage_of_school_aged_children_who_live_in_low_income_households))
+select_data$percentage_of_students_whose_parents_have_some_university_education <- as.numeric(as.character(select_data$percentage_of_students_whose_parents_have_some_university_education))
+
 #### save cleaned/reduced data set ####
 
 writexl::write_xlsx(select_data, here("outputs/data/cleaned_data.xlsx"), col_names = TRUE)
