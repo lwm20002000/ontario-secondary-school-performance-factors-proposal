@@ -35,3 +35,8 @@ vignettes/*.pdf
 *.utf8.md
 *.knit.md
 outputs/paper/proposal.tex
+outputs/paper/proposal.log
+outputs/paper/proposal.out
+outputs/paper/proposal.aux
+outputs/paper/proposal_files/figure-latex/fig1-1.pdf
+outputs/paper/proposal_files/figure-latex/fig2-1.pdf
