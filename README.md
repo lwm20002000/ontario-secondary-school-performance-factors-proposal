@@ -1,2 +1,3 @@
-# 2400-Proposal
- Investigating the relationship of parent education levels and household income on student achievement in standardized examinations in secondary school students using the Ontario Data Catalogue's dataset.
+# INF2400 Proposal
+
+This repo aims to investigate the relationship of parent education levels and household income on student achievement in standardized examinations in secondary school students of English speaking schools within Ontario, using the Ontario Data Catalogue's dataset. Specifically, I am looking to see if the percentage of students in low income households, and the percentage of students with parents' who have some/completed post-secondary education affects pass rates and meeting of achievement standards in the Grade 9 EQAO, Grade 10 OSSLT, as well as achievement in Grade 9 Applied and Academic math classes. As such, schools that do not take these standardized tests (French-speaking schools), as well as schools that did not report results for one or more of these classes/tests were omitted from the data analysis.
